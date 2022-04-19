@@ -13,22 +13,14 @@ export class ExpertsClubPipelinesStack extends Stack {
 
     const helloWithCounter = new HitCounter(this, stackName);
 
-    const gateway = new apiGateway.LambdaRestApi(this, `${stackName}Endpoint`, {
+    new apiGateway.LambdaRestApi(this, `${stackName}Endpoint`, {
       handler: helloWithCounter.handler
     });
 
-    const tv = new TableViewer(this, `${stackName}ViewCounter`, {
+    new TableViewer(this, `${stackName}ViewCounter`, {
       title: 'Hello Hits',
       table: helloWithCounter.table,
       sortBy: '-hits'
-    });
-
-    this.hcEndpoint = new CfnOutput(this, 'GatewayUrl', {
-      value: gateway.url
-    });
-
-    this.hcViewerUrl = new CfnOutput(this, 'TableViewerUrl', {
-      value: tv.endpoint
     });
   }
 }
