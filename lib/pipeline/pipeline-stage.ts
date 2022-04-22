@@ -1,4 +1,4 @@
-import { ExpertsClubPipelinesStack } from '../cdk-pipelines-stack';
+import { ExpertsClubStack } from '../experts-club-stack';
 import { Stage, CfnOutput, StageProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 
@@ -9,7 +9,7 @@ export class ExpertsClubPipelineStage extends Stage {
   constructor(scope: Construct, id: string, props?: StageProps) {
     super(scope, id, props);
 
-    const service = new ExpertsClubPipelinesStack(this, 'ExpertsClubPipelinesStack');
+    const service = new ExpertsClubStack(this, 'ExpertsClubPipelinesStack');
 
     this.hcEndpoint = service.hcEndpoint;
     this.hcViewerUrl = service.hcViewerUrl;

@@ -3,7 +3,7 @@ import { TableViewer } from 'cdk-dynamo-table-viewer';
 import { Construct } from 'constructs';
 import { HitCounter } from './hitcounter';
 
-export class ExpertsClubPipelinesStack extends Stack {
+export class ExpertsClubStack extends Stack {
   public readonly hcViewerUrl: CfnOutput;
   public readonly hcEndpoint: CfnOutput;
 
