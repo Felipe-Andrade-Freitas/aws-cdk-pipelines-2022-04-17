@@ -1,12 +1,11 @@
-import * as cdk from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-import * as codecommit from 'aws-cdk-lib/aws-codecommit';
+import { Stack, StackProps } from "aws-cdk-lib";
+import { Construct } from "constructs";
+import * as codecommit from "aws-cdk-lib/aws-codecommit";
 import { CodeBuildStep, CodePipeline, CodePipelineSource } from "aws-cdk-lib/pipelines";
 import { ExpertsClubPipelineStage } from './pipeline-stage';
 
-export class ExpertsClubPipelineStack extends cdk.Stack {
-  constructor(scope: Construct, id: string, props?: cdk.StackProps) {
-
+export class ExpertsClubPipelineStack extends Stack {
+  constructor(scope: Construct, id: string, props?: StackProps ) {
     super(scope, id, props);
 
     const repo = new codecommit.Repository(this, 'ExpertsClubRepo', {
@@ -15,45 +14,44 @@ export class ExpertsClubPipelineStack extends cdk.Stack {
 
     const pipeline = new CodePipeline(this, 'Pipeline', {
       pipelineName: 'ExpertsClubPipeline',
-      synth: new CodeBuildStep('SynthStep', {
+      synth: new CodeBuildStep("SynthStep", {
         input: CodePipelineSource.codeCommit(repo, 'master'),
         installCommands: [
-          'npm install -g aws-cdk'
+          'npm install -g aws-cdk',
         ],
         commands: [
           'npm ci',
           'npm run build',
-          'npx cdk synth'
+          'npx cdk synth',
         ]
-      }
-      )
+      })
     });
 
     const deploy = new ExpertsClubPipelineStage(this, 'Deploy');
     const deployStage = pipeline.addStage(deploy);
 
     deployStage.addPost(
-      new CodeBuildStep('TestViewerEndpoint', {
-        projectName: 'TestViewerEndpoint',
+      new CodeBuildStep('TesteViwerEndpoint', {
+        projectName: 'TesteViwerEndpoint',
         envFromCfnOutputs: {
           ENDPOINT_URL: deploy.hcViewerUrl
         },
         commands: [
-          'curl -Ssf $ENDPOINT_URL'
+          'curl -Ssf $ENDPOINT_URL',
         ]
       }),
 
-      new CodeBuildStep('TestAPIGatewayEndpoint', {
-        projectName: 'TestAPIGatewayEndpoint',
+      new CodeBuildStep('TesteEndpoint', {
+        projectName: 'TesteEndpoint',
         envFromCfnOutputs: {
           ENDPOINT_URL: deploy.hcEndpoint
         },
         commands: [
           'curl -Ssf $ENDPOINT_URL',
           'curl -Ssf $ENDPOINT_URL/hello',
-          'curl -Ssf $ENDPOINT_URL/test'
+          'curl -Ssf $ENDPOINT_URL/test',
         ]
       })
-    )
+    );
   }
 }
