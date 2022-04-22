@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { ExpertsClubPipelinesStack } from '../lib/cdk-pipelines-stack';
+import { ExpertsClubStack } from '../lib/experts-club-stack';
 
 const app = new cdk.App();
 
 
-new ExpertsClubPipelinesStack(app, 'CdkWorkshopPipelineStack');
+new ExpertsClubStack(app, 'CdkWorkshopPipelineStack');
